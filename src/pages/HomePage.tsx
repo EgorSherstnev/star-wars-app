@@ -1,23 +1,29 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { fetchCharacters } from '../services/api';
+import { fetchCharacters } from '../store/charactersSlice';
+import { RootState, AppDispatch } from '../store/store';
 
 const HomePage: React.FC = () => {
-   const [characters, setCharacters] = useState([]);
+   const dispatch = useDispatch<AppDispatch>();
    const navigate = useNavigate();
+   const characters = useSelector((state: RootState) => state.characters.characters);
+   const status = useSelector((state: RootState) => state.characters.status);
+   const error = useSelector((state: RootState) => state.characters.error);
 
    useEffect(() => {
-      const getCharacters = async () => {
-      try {
-         const characters = await fetchCharacters();
-         setCharacters(characters);
-      } catch (error) {
-         console.error(error);
+      if (status === 'idle') {
+         dispatch(fetchCharacters());
       }
-   };
+   }, [status, dispatch]);
 
-      getCharacters();
-   }, []);
+   if (status === 'loading') {
+      return <div>Loading...</div>;
+   }
+
+   if (status === 'failed') {
+      return <div>Error: {error}</div>;
+   }
 
    return (
       <div className="home-page">
