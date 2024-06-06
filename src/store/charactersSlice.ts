@@ -31,6 +31,10 @@ const charactersSlice = createSlice({
       state.viewedCharacters.push(action.payload);
       sessionStorage.setItem('viewedCharacters', JSON.stringify(state.viewedCharacters));
     },
+    clearViewedCharacters: (state) => {
+      state.viewedCharacters = [];
+      sessionStorage.removeItem('viewedCharacters');
+    },
     resetPagination: (state) => {
       state.currentPage = 1;
       state.nextPage = null;
@@ -68,6 +72,6 @@ const charactersSlice = createSlice({
   },
 });
 
-export const { addViewedCharacter, resetPagination } = charactersSlice.actions;
+export const { addViewedCharacter, clearViewedCharacters, resetPagination } = charactersSlice.actions;
 
 export default charactersSlice.reducer;
