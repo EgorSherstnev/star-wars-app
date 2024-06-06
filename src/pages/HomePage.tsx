@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, NavigateFunction  } from 'react-router-dom';
-import { fetchCharacters } from '../store/charactersSlice';
+import { fetchCharacters, searchCharacters } from '../store/charactersSlice';
 import { RootState, AppDispatch } from '../store/store';
 import { ICharacter } from '../models/ICharacter';
 import CharacterList from '../components/CharacterList ';
+import SearchBar from '../components/SearchBar';
 import HistoryList from '../components/HistoryList';
 
 const HomePage: React.FC = () => {
@@ -28,6 +29,10 @@ const HomePage: React.FC = () => {
       return <div>Error: {error}</div>;
    }
 
+   const handleSearch = (query: string) => {
+      dispatch(searchCharacters(query));
+   };
+
    const handleCharacterClick = (character: ICharacter) => {
       const characterId = character.url.split('/').filter(Boolean).pop();
       navigate(`/character/${characterId}`);
@@ -36,6 +41,7 @@ const HomePage: React.FC = () => {
    return (
       <div className="home-page">
          <h1>Homepage</h1>
+         <SearchBar onSearch={handleSearch} />
          <CharacterList characters={characters} onCharacterClick={handleCharacterClick} />
          <HistoryList onCharacterClick={handleCharacterClick} />
       </div>
