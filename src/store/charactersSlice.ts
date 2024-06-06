@@ -5,17 +5,22 @@ import { ICharactersState } from '../models/ICharactersState';
 
 const initialState: ICharactersState = {
   characters: [],
-  viewedCharacters: JSON.parse(localStorage.getItem('viewedCharacters') || '[]'),
+  viewedCharacters: JSON.parse(sessionStorage.getItem('viewedCharacters') || '[]'),
   status: 'idle',
   error: null,
+  currentPage: 1,
+  nextPage: null,
+  previousPage: null,
 };
 
-export const fetchCharacters = createAsyncThunk('characters/fetchCharacters', async () => {
-  return await fetchCharactersAPI();
+export const fetchCharacters = createAsyncThunk('characters/fetchCharacters', async (page: number = 1) => {
+  const response = await fetchCharactersAPI(page);
+  return response;
 });
 
-export const searchCharacters = createAsyncThunk('characters/searchCharacters', async (query: string) => {
-  return await searchCharactersAPI(query);
+export const searchCharacters = createAsyncThunk('characters/searchCharacters', async ({ query, page }: { query: string, page: number }) => {
+  const response = await searchCharactersAPI(query, page);
+  return response;
 });
 
 const charactersSlice = createSlice({
@@ -24,7 +29,12 @@ const charactersSlice = createSlice({
   reducers: {
     addViewedCharacter: (state, action: PayloadAction<ICharacter>) => {
       state.viewedCharacters.push(action.payload);
-      localStorage.setItem('viewedCharacters', JSON.stringify(state.viewedCharacters));
+      sessionStorage.setItem('viewedCharacters', JSON.stringify(state.viewedCharacters));
+    },
+    resetPagination: (state) => {
+      state.currentPage = 1;
+      state.nextPage = null;
+      state.previousPage = null;
     },
   },
   extraReducers: (builder) => {
@@ -34,7 +44,9 @@ const charactersSlice = createSlice({
       })
       .addCase(fetchCharacters.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.characters = action.payload;
+        state.characters = action.payload.results;
+        state.nextPage = action.payload.next;
+        state.previousPage = action.payload.previous;
       })
       .addCase(fetchCharacters.rejected, (state, action) => {
         state.status = 'failed';
@@ -45,7 +57,9 @@ const charactersSlice = createSlice({
       })
       .addCase(searchCharacters.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.characters = action.payload;
+        state.characters = action.payload.results;
+        state.nextPage = action.payload.next;
+        state.previousPage = action.payload.previous;
       })
       .addCase(searchCharacters.rejected, (state, action) => {
         state.status = 'failed';
@@ -54,6 +68,6 @@ const charactersSlice = createSlice({
   },
 });
 
-export const { addViewedCharacter } = charactersSlice.actions;
+export const { addViewedCharacter, resetPagination } = charactersSlice.actions;
 
 export default charactersSlice.reducer;

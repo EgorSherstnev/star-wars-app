@@ -6,7 +6,7 @@ interface HistoryListProps {
 }
 
 const HistoryList: React.FC<HistoryListProps> = ({ onCharacterClick }) => {
-   const viewedCharacters: ICharacter[] = JSON.parse(localStorage.getItem('viewedCharacters') || '[]');
+   const viewedCharacters: ICharacter[] = JSON.parse(sessionStorage.getItem('viewedCharacters') || '[]');
 
    return (
       <div className="history-list">

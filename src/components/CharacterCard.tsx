@@ -10,7 +10,7 @@ interface CharacterCardProps {
 const CharacterCard: React.FC<CharacterCardProps> = ({ character, onClick }) => {
    return (
       <div onClick={() => onClick(character)} className="character-card">
-         <h3>{character.name}</h3>
+         <li key={character.name}>{character.name}</li>
       </div>
    );
 };
