@@ -5,6 +5,7 @@ import { fetchCharacters } from '../store/charactersSlice';
 import { RootState, AppDispatch } from '../store/store';
 import { ICharacter } from '../models/ICharacter';
 import CharacterList from '../components/CharacterList ';
+import HistoryList from '../components/HistoryList';
 
 const HomePage: React.FC = () => {
    const dispatch = useDispatch<AppDispatch>();
@@ -36,6 +37,7 @@ const HomePage: React.FC = () => {
       <div className="home-page">
          <h1>Homepage</h1>
          <CharacterList characters={characters} onCharacterClick={handleCharacterClick} />
+         <HistoryList onCharacterClick={handleCharacterClick} />
       </div>
    );
 };
