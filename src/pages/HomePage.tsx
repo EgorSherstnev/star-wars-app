@@ -30,6 +30,12 @@ const HomePage: React.FC = () => {
       dispatch(searchCharacters({ query: searchQuery, page: 1 }));
    };
 
+   const handleReset = () => {
+      setQuery('');
+      dispatch(resetPagination());
+      dispatch(fetchCharacters(1));
+   };
+
    const handleCharacterClick = (character: ICharacter) => {
       const characterId = character.url.split('/').filter(Boolean).pop();
       navigate(`/character/${characterId}`);
@@ -64,7 +70,7 @@ const HomePage: React.FC = () => {
    return (
       <div className="home-page">
          <h1>Homepage</h1>
-         <SearchBar onSearch={handleSearch} />
+         <SearchBar onSearch={handleSearch} onReset={handleReset} />
          <CharacterList characters={characters} onCharacterClick={handleCharacterClick} />
          <HistoryList onCharacterClick={handleCharacterClick} />
          <div className="pagination">
