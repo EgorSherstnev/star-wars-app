@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Input, Button } from 'antd';
 
 interface SearchBarProps {
    onSearch: (query: string) => void;
@@ -18,15 +19,15 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, onReset }) => {
    };
 
    return (
-      <div className="search-bar">
-         <input 
-            type="text" 
+      <div className="search-bar" style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+         <Input 
             value={query} 
             onChange={(e) => setQuery(e.target.value)} 
-            placeholder="Search for characters..."
+            placeholder="Search for characters..." 
+            style={{ width: '200px' }}
          />
-         <button onClick={handleSearch}>Search</button>
-         <button onClick={handleReset}>Reset</button>
+         <Button type="primary" onClick={handleSearch}>Search</Button>
+         <Button onClick={handleReset}>Reset</Button>
       </div>
    );
 };

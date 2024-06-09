@@ -1,0 +1,16 @@
+.character-card-container {
+   margin: 2% 0;
+}
+
+.card-wrapper {
+   max-width: 400px;
+   border: 1px solid #ccc;
+   border-radius: 5px;
+   padding: 10px;
+   cursor: pointer; 
+   transition: background-color 0.3s; 
+}
+
+.character-card-wrapper:hover {
+   background-color: #f0f0f0; 
+}

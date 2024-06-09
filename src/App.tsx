@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import 'antd/dist/antd';
 import HomePage from './pages/HomePage';
 import CharacterPage from './pages/CharacterPage';
 import NotFoundPage from './pages/NotFoundPage';

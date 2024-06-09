@@ -3,6 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ICharacter } from '../models/ICharacter';
 import { clearViewedCharacters } from '../store/charactersSlice';
 import { RootState } from '../store/store';
+import { Button, List, Typography } from 'antd';
+
+const { Title } = Typography;
 
 interface HistoryListProps {
    onCharacterClick: (character: ICharacter) => void;
@@ -15,30 +18,35 @@ const HistoryList: React.FC<HistoryListProps> = ({ onCharacterClick }) => {
 
    const toggleExpansion = () => {
       setIsExpanded(!isExpanded);
-   }
+   };
 
    const clearHistory = () => {
       dispatch(clearViewedCharacters());
    };
 
    return (
-      <div className="history-list">
+      <div className="history-list" style={{ maxWidth: '400px'}}>
          {viewedCharacters.length > 0 && (
             <>
-               <h3 onClick={toggleExpansion}>
+               <Title level={3} onClick={toggleExpansion} style={{ cursor: 'pointer' }}>
                   Viewed Characters ({viewedCharacters.length}) {isExpanded ? '▲' : '▼'}
-               </h3>
-               <button onClick={clearHistory}>Clear History</button>
+               </Title>
+               <Button onClick={clearHistory} type="primary" style={{ marginBottom: '10px' }}>
+                  Clear History
+               </Button>
             </>
          )}
          {isExpanded && (
-            <ul>
-               {viewedCharacters.map((character, index) => (
-                  <li key={`${character.url}-${index}`} onClick={() => onCharacterClick(character)}>
+            <List
+               size="small"
+               bordered
+               dataSource={viewedCharacters}
+               renderItem={(character) => (
+                  <List.Item onClick={() => onCharacterClick(character)} style={{ cursor: 'pointer'}}>
                      {character.name}
-                  </li>
-               ))}
-            </ul>
+                  </List.Item>
+               )}
+            />
          )}
       </div>
    );

@@ -4,9 +4,12 @@ import { useNavigate, NavigateFunction } from 'react-router-dom';
 import { fetchCharacters, searchCharacters, resetPagination } from '../store/charactersSlice';
 import { RootState, AppDispatch } from '../store/store';
 import { ICharacter } from '../models/ICharacter';
-import CharacterList from '../components/CharacterList ';
+import CharacterList from '../components/CharacterList';
 import SearchBar from '../components/SearchBar';
 import HistoryList from '../components/HistoryList';
+import { Typography, Button, Spin, Pagination, Row, Col } from 'antd';
+
+const { Title } = Typography;
 
 const HomePage: React.FC = () => {
    const dispatch = useDispatch<AppDispatch>();
@@ -41,26 +44,20 @@ const HomePage: React.FC = () => {
       navigate(`/character/${characterId}`);
    };
 
-   const handleNextPage = () => {
-      if (nextPage) {
-         const page = new URL(nextPage).searchParams.get('page');
-         if (page) {
-            dispatch(fetchCharacters(parseInt(page)));
-         }
-      }
-   };
-
-   const handlePreviousPage = () => {
-      if (previousPage) {
-         const page = new URL(previousPage).searchParams.get('page');
-         if (page) {
-            dispatch(fetchCharacters(parseInt(page)));
-         }
+   const handlePageChange = (page: number) => {
+      if (query) {
+         dispatch(searchCharacters({ query, page }));
+      } else {
+         dispatch(fetchCharacters(page));
       }
    };
 
    if (status === 'loading') {
-      return <div>Loading...</div>;
+      return (
+         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+            <Spin />
+         </div>
+      );
    }
 
    if (status === 'failed') {
@@ -68,15 +65,21 @@ const HomePage: React.FC = () => {
    }
 
    return (
-      <div className="home-page">
-         <h1>Homepage</h1>
+      <div className="home-page" style={{ padding: '20px' }}>
+         <Title level={1}>Homepage</Title>
          <SearchBar onSearch={handleSearch} onReset={handleReset} />
          <CharacterList characters={characters} onCharacterClick={handleCharacterClick} />
          <HistoryList onCharacterClick={handleCharacterClick} />
-         <div className="pagination">
-            {previousPage && <button onClick={handlePreviousPage}>Previous</button>}
-            {nextPage && <button onClick={handleNextPage}>Next</button>}
-         </div>
+         <Row justify="center" style={{ marginTop: '20px' }}>
+            <Col>
+               <Pagination
+                  current={nextPage ? parseInt(new URL(nextPage).searchParams.get('page')!) - 1 : 1}
+                  onChange={handlePageChange}
+                  total={characters.length * 10} // Здесь предполагается, что всего 10 страниц
+                  showSizeChanger={false}
+               />
+            </Col>
+         </Row>
       </div>
    );
 };

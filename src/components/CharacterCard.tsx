@@ -1,4 +1,3 @@
-// src/components/CharacterCard.tsx
 import React from 'react';
 import { ICharacter } from '../models/ICharacter';
 
@@ -9,8 +8,8 @@ interface CharacterCardProps {
 
 const CharacterCard: React.FC<CharacterCardProps> = ({ character, onClick }) => {
    return (
-      <div onClick={() => onClick(character)} className="character-card">
-         <li key={character.name}>{character.name}</li>
+      <div onClick={() => onClick(character)} className="character-card" style={{ listStyleType: 'none' }}>
+         <li key={character.name} style={{ listStyleType: 'none' }}>{character.name}</li>
       </div>
    );
 };
